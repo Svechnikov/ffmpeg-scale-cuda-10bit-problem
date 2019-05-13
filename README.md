@@ -8,10 +8,10 @@ When scaling a 10bit video using `scale_cuda` filter (witch uses pixel format `A
 I suppose it has something to do with the differences in processing between cuda_sdk and ffnvcodec with cuda_nvcc (the problem appears after this commit [https://github.com/FFmpeg/FFmpeg/commit/2544c7ea67ca9521c5de36396bc9ac7058223742](https://github.com/FFmpeg/FFmpeg/commit/2544c7ea67ca9521c5de36396bc9ac7058223742)).
 
 **Demonstration of the problem:**
-![https://raw.githubusercontent.com/Svechnikov/ffmpeg-scale-cuda-10bit-problem/master/screenshots/problem.jpg](https://raw.githubusercontent.com/Svechnikov/ffmpeg-scale-cuda-10bit-problem/master/screenshots/problem.jpg)
+![Demonstration of the problem](https://raw.githubusercontent.com/Svechnikov/ffmpeg-scale-cuda-10bit-problem/master/screenshots/problem.jpg)
 
 **What it should look like:**
-![https://raw.githubusercontent.com/Svechnikov/ffmpeg-scale-cuda-10bit-problem/master/screenshots/fix.jpg](https://raw.githubusercontent.com/Svechnikov/ffmpeg-scale-cuda-10bit-problem/master/screenshots/fix.jpg)
+![What it should look like](https://raw.githubusercontent.com/Svechnikov/ffmpeg-scale-cuda-10bit-problem/master/screenshots/fix.jpg)
 
 This repository is intended to prove that such problem exists and to show, how to solve it.
 
