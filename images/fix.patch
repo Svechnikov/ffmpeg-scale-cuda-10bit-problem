@@ -1,0 +1,33 @@
+From b7a53b4be79f6194fd3bd7659d458586b2128ae4 Mon Sep 17 00:00:00 2001
+From: Sergey Svechnikov <svechnikov66@gmail.com>
+Date: Mon, 13 May 2019 13:32:29 +0500
+Subject: [PATCH] libavfilter/vf_scale_cuda: fix src_pitch for 10bit videos
+
+When scaling a 10bit video using scale_cuda filter (witch uses pixel format AV_PIX_FMT_P010LE), output video gets distorted.
+I think it has something to do with the differences in processing between cuda_sdk and ffnvcodec with cuda_nvcc (the problem appears after this commit https://github.com/FFmpeg/FFmpeg/commit/2544c7ea67ca9521c5de36396bc9ac7058223742).
+To solve the problem we should not divide the input frame planes' linesizes by 2 and leave them as they are.
+More info, samples and reproduction steps are here https://github.com/Svechnikov/ffmpeg-scale-cuda-10bit-problem
+---
+ libavfilter/vf_scale_cuda.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/libavfilter/vf_scale_cuda.c b/libavfilter/vf_scale_cuda.c
+index c97a802..7fc33ee 100644
+--- a/libavfilter/vf_scale_cuda.c
++++ b/libavfilter/vf_scale_cuda.c
+@@ -423,11 +423,11 @@ static int scalecuda_resize(AVFilterContext *ctx,
+         break;
+     case AV_PIX_FMT_P010LE:
+         call_resize_kernel(ctx, s->cu_func_ushort, 1,
+-                           in->data[0], in->width, in->height, in->linesize[0]/2,
++                           in->data[0], in->width, in->height, in->linesize[0],
+                            out->data[0], out->width, out->height, out->linesize[0]/2,
+                            2);
+         call_resize_kernel(ctx, s->cu_func_ushort2, 2,
+-                           in->data[1], in->width / 2, in->height / 2, in->linesize[1]/2,
++                           in->data[1], in->width / 2, in->height / 2, in->linesize[1],
+                            out->data[0] + out->linesize[0] * ((out->height + 31) & ~0x1f), out->width / 2, out->height / 2, out->linesize[1] / 4,
+                            2);
+         break;
+-- 
+2.7.4
