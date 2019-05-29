@@ -1,6 +1,10 @@
 FFmpeg scale_cuda 10bit problem
 ---
 
+**Update**
+
+The problem was fixed by ffmpeg-developers. In addition, other improvements were made [https://www.mail-archive.com/ffmpeg-devel@ffmpeg.org/msg83815.html](https://www.mail-archive.com/ffmpeg-devel@ffmpeg.org/msg83815.html).
+
 # <a name="about"></a>Description
 
 When scaling a 10bit video using `scale_cuda` filter (witch uses pixel format `AV_PIX_FMT_P010LE`), the output video gets distorted.
